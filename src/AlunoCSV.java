@@ -72,9 +72,13 @@ public class AlunoCSV {
                 String nome = partes[0];
                 String matricula = partes[1];
                 String curso = partes[2];
+                String cpf = partes[3];
+                String email = partes[4];
+                String dataNascimento = partes[5];
+                int periodo = Integer.parseInt(partes[6]);
 
                 //Criar um novo objeto Aluno e adicioná-lo à lista
-                Aluno aluno = new Aluno(nome, matricula, curso);
+                Aluno aluno = new Aluno(nome, matricula, curso, cpf, email, dataNascimento, periodo);
                 alunos.add(aluno);
             }
             //Fechar o leitor
