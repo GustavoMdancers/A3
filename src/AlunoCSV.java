@@ -17,7 +17,7 @@ public class AlunoCSV {
                 escritor.write("Nome,Matricula,Curso\n");
             }
             //Escrever os dados do aluno no arquivo CSV
-            escritor.write(aluno.getNome() + ";" + aluno.getMatricula() + ";" + aluno.getCurso() + "\n");
+            escritor.write(aluno.getNome() + ";" + aluno.getMatricula() + ";" + aluno.getCurso() + ";" + aluno.getCpf() + ";" + aluno.getEmail() + ";" + aluno.getDataNascimento() + ";" + aluno.getPeriodo() + "\n");
             // Garantir que os dados sejam gravados no arquivo
             escritor.flush();
             // Fechar o escritor
