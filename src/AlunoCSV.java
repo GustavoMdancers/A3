@@ -1,77 +1,3 @@
-/*
-import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-
-public class AlunoCSV {
-    //Caminho do arquivo CSV
-    private static String nomeArquivo = "./BancoDeDados/alunosCSV.csv";
-
-    public static void adicionarAluno(Aluno aluno) {
-        //Lógica para adicionar um aluno ao arquivo CSV
-        try {
-            boolean arquivoExiste = new File(nomeArquivo).exists();
-
-            OutputStreamWriter escritor = new OutputStreamWriter(new FileOutputStream(nomeArquivo, true), StandardCharsets.ISO_8859_1);
-            if (!arquivoExiste) {
-                //Se o arquivo não existir, escrever o cabeçalho
-                escritor.write("Nome,Matricula,Curso\n");
-            }
-            //Escrever os dados do aluno no arquivo CSV
-            escritor.write(aluno.getNome() + ";" + aluno.getMatricula() + ";" + aluno.getCurso() + ";" + aluno.getCpf() + ";" + aluno.getEmail() + ";" + aluno.getDataNascimento() + ";" + aluno.getPeriodo() + "\n");
-            // Garantir que os dados sejam gravados no arquivo
-            escritor.flush();
-            // Fechar o escritor
-            escritor.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    // Metodo para ler os alunos do arquivo CSV
-    public static ArrayList<Aluno> lerAlunos() {
-        ArrayList<Aluno> alunos = new ArrayList<>();
-
-        try {
-
-            //Iniciar leitor para ler o arquivo CSV
-            BufferedReader leitor = new BufferedReader(new FileReader(nomeArquivo));
-            String linha;
-            boolean primeiraLinha = true;
-
-            while ((linha = leitor.readLine()) != null) {
-                if (primeiraLinha) {
-                    // Ignorar a primeira linha (cabeçalho)
-                    primeiraLinha = false;
-                    continue;
-                }
-                //Dividir a linha em partes usando vírgula como delimitador
-                String[] partes = linha.split(";");
-
-                String nome = partes[0];
-                String matricula = partes[1];
-                String curso = partes[2];
-                String cpf = partes[3];
-                String email = partes[4];
-                String dataNascimento = partes[5];
-                int periodo = Integer.parseInt(partes[6]);
-
-                //Criar um novo objeto Aluno e adicioná-lo à lista
-                Aluno aluno = new Aluno(nome, matricula, curso, cpf, email, dataNascimento, periodo);
-                alunos.add(aluno);
-            }
-            //Fechar o leitor
-            leitor.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return alunos;
-    }
-}
-*/
-
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -84,12 +10,12 @@ public class AlunoCSV {
 
     private static final String separador = ";";
     private static final String cabecalho = "Nome + separador + " +
-            "Matricula" + separador + " +
-            "Curso" + separador + " +
-            "CPF" + separador + " +
-            "Email" + separador + " +
-            "DataNascimento" + separador + " +
-            "Periodo\n";
+            "Matrícula" + separador +
+            "Curso" + separador +
+            "CPF" + separador +
+            "Email" + separador +
+            "Data de Nascimento" + separador +
+            "Período";
 
     public static void salvarAlunos(List<Aluno> aluno, String caminhoArquivo) throws IOException {
         Path pathArquivo = Paths.get(caminhoArquivo);
@@ -106,7 +32,7 @@ public class AlunoCSV {
 
             if (aluno != null) {
                 for (Aluno aluno1 : aluno) {
-                    writer.write(aluno.toString());
+                    writer.write(aluno.toCsvString());
                     writer.newLine();
                 }
             }
@@ -165,7 +91,7 @@ public class AlunoCSV {
                 if (!linha.trim().isEmpty()) {
                     System.err.println("Tentando ler os dados do arquivo sem o cabeçalho...");
                     try {
-                        alunos.add(Aluno.fromString(linha));
+                        alunos.add(Aluno.fromCsvString(linha));
                     } catch (Validacao e) {
                         System.err.println("Erro ao processar a primeira linha (sem cabeçalho ou cabeçalho inválido) como dados: '" + linha + "'. Erro: " + e.getMessage() + ". Linha ignorada.");
 
@@ -177,9 +103,12 @@ public class AlunoCSV {
                 if (linha.trim().isEmpty()) {
                     try {
                         alunos.add(Aluno.fromCsvString(linha));
+                    } catch (Validacao e) {
+                        System.err.println("Erro ao processar a linha vazia: '" + linha + "'. Erro: " + e.getMessage() + ". Linha ignorada.");
                     }
                 }
             }
         }
+        return alunos;
     }
 }

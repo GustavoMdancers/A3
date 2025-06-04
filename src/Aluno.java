@@ -86,4 +86,69 @@ public class Aluno {
         this.periodo = periodo;
     }
 
+    @Override
+    public String toString() {
+        return "Aluno{" +
+                "nome='" + nome + '\'' +
+                ", matricula='" + matricula + '\'' +
+                ", curso='" + curso + '\'' +
+                ", cpf='" + cpf + '\'' +
+                ", email='" + email + '\'' +
+                ", dataNascimento='" + dataNascimento + '\'' +
+                ", periodo=" + periodo +
+                '}';
+    }
+
+    public String toCsvString() {
+        String separador = ";";
+        return nome + separador +
+                matricula + separador +
+                curso + separador +
+                cpf + separador +
+                email + separador +
+                dataNascimento + separador +
+                periodo;
+    }
+
+    public static Aluno fromCsvString(String csvLine) throws Validacao {
+        String separador = ";";
+        String[] campos = csvLine.split(separador, -1);
+
+        if (campos.length < 7) {
+            throw new Validacao ("Dados insuficientes para criar um Aluno: '" + csvLine + "'. Esperado 7 campos, mas encontrado " + campos.length + ".");
+        }
+
+        for (int i = 0; i < campos.length; i++) {
+            if (i != 5 && (campos[1] == null || campos[i].trim().isEmpty())) {
+                String nomeCampo = "";
+                switch(i) {
+                    case 0: nomeCampo = "Nome"; break;
+                    case 1: nomeCampo = "Matrícula"; break;
+                    case 2: nomeCampo = "Curso"; break;
+                    case 3: nomeCampo = "CPF"; break;
+                    case 4: nomeCampo = "Email"; break;
+                    case 5: nomeCampo = "Data de Nascimento"; break;
+                    case 6: nomeCampo = "Período"; break;
+            }
+            throw new Validacao (nomeCampo + " não pode ser vazio na linha CSV: '" + csvLine + "'.");
+        }
+    }
+    String nome = campos[0];
+    String matricula = campos[1];
+    String curso = campos[2];
+    String cpf = campos[3];
+    String email = campos[4].trim();
+    String dataNascimento = campos[5];
+    int periodo;
+
+    try {
+        if (campos[6].trim().isEmpty()) {
+            throw new Validacao("Período não pode ser vazio na linha CSV: '" + csvLine + "'.");
+        }
+        periodo = Integer.parseInt(campos[6].trim());
+    } catch (NumberFormatException e) {
+        throw new Validacao("Período inválido na linha CSV: '" + csvLine + "'.");
+    }
+    return new Aluno(nome, matricula, curso, cpf, email, dataNascimento, periodo);
+    }
 }
