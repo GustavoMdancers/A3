@@ -32,7 +32,7 @@ public class AlunoCSV {
 
             if (aluno != null) {
                 for (Aluno aluno1 : aluno) {
-                    writer.write(aluno.toCsvString());
+                    writer.write(aluno1.toCsvString());
                     writer.newLine();
                 }
             }

@@ -1,5 +1,10 @@
 public class Aluno {
-    private String nome, matricula, curso, cpf, email, dataNascimento;
+    private String nome;
+    private String matricula;
+    private String curso;
+    private String cpf;
+    private String email;
+    private String dataNascimento;
     private int periodo;
 
     public Aluno(String nome, String matricula, String curso, String cpf, String email, String dataNascimento, int periodo) {
