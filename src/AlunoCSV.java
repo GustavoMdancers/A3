@@ -26,27 +26,6 @@ public class AlunoCSV {
             e.printStackTrace();
         }
 
-        /*try {
-            //Verificar se o arquivo existe
-            boolean arquivoExiste = new File(nomeArquivo).exists();
-
-            //Iniciar escritor para editar o arquivo CSV
-            FileWriter escritor = new FileWriter(nomeArquivo, StandardCharsets.ISO_8859_1, true);
-            if (!arquivoExiste) {
-                //Se o arquivo não existir, escrever o cabeçalho
-                escritor.write("Nome,Matricula,Curso\n");
-            }
-
-            //Escrever os dados do aluno no arquivo CSV
-            escritor.write(aluno.getNome() + "," + aluno.getMatricula() + "," + aluno.getCurso() + "\n");
-            // Garantir que os dados sejam gravados no arquivo
-            escritor.flush();
-            // Fechar o escritor
-            escritor.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
     }
 
     // Metodo para ler os alunos do arquivo CSV
