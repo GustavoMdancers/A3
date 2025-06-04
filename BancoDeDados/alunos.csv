@@ -1,2 +1,1 @@
-Nome + separador + Matrícula;Curso;CPF;Email;Data de Nascimento;Período
-Gustavo Morais;1242022304;ADS;12345678901;teste123;03/08/1999;2
+Nome;Matrícula;Curso;CPF;Email;Data de Nascimento;Período

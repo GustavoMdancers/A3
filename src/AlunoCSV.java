@@ -9,7 +9,7 @@ import java.util.List;
 public class AlunoCSV {
 
     private static final String separador = ";";
-    private static final String cabecalho = "Nome + separador + " +
+    private static final String cabecalho = "Nome" + separador +
             "Matrícula" + separador +
             "Curso" + separador +
             "CPF" + separador +
