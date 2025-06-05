@@ -17,23 +17,25 @@ public class AlunoCSV {
             "Data de Nascimento" + separador +
             "Período";
 
-    public static void salvarAlunos(List<Aluno> aluno, String caminhoArquivo) throws IOException {
+    public static void salvarAlunos(List<Aluno> alunos, String caminhoArquivo) throws IOException {
         Path pathArquivo = Paths.get(caminhoArquivo);
         Path diretorioPai = pathArquivo.getParent();
 
-        if(diretorioPai != null && !Files.exists(diretorioPai)) {
+        if (diretorioPai != null && !Files.exists(diretorioPai)) {
             Files.createDirectories(diretorioPai);
-            System.out.println("Diretório criado: " + diretorioPai.toAbsolutePath());
+            System.out.println("LOG: Diretório criado: " + diretorioPai.toAbsolutePath());
         }
 
-        try (BufferedWriter writer = new BufferedWriter (new OutputStreamWriter (new FileOutputStream(caminhoArquivo), StandardCharsets.UTF_8))) {
-            writer.write (cabecalho);
-            writer.newLine ();
+        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(caminhoArquivo, false), StandardCharsets.UTF_8))) {
+            writer.write(cabecalho);
+            writer.newLine();
 
-            if (aluno != null) {
-                for (Aluno aluno1 : aluno) {
-                    writer.write(aluno1.toCsvString());
-                    writer.newLine();
+            if (alunos != null) {
+                for (Aluno aluno : alunos) {
+                    if (aluno != null) {
+                        writer.write(aluno.toCsvString());
+                        writer.newLine();
+                    }
                 }
             }
         }
@@ -41,7 +43,7 @@ public class AlunoCSV {
 
     public static void adicionarAluno(Aluno aluno, String caminhoArquivo) throws IOException {
         if (aluno == null) {
-            System.err.println("Aluno não pode ser nulo.");
+            System.err.println("LOG: Tentativa de adicionar aluno nulo ao CSV. Operação ignorada.");
             return;
         }
 
@@ -51,17 +53,17 @@ public class AlunoCSV {
 
         if (diretorioPai != null && !Files.exists(diretorioPai)) {
             Files.createDirectories(diretorioPai);
-            System.out.println("Diretório criado: " + diretorioPai.toAbsolutePath());
+            System.out.println("LOG: Diretório criado: " + diretorioPai.toAbsolutePath());
         }
 
         boolean escreverCabecalho = !arquivo.exists() || arquivo.length() == 0;
 
-        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter (new FileOutputStream(arquivo, true), StandardCharsets.UTF_8))) {
+        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(arquivo, true), StandardCharsets.UTF_8))) {
             if (escreverCabecalho) {
                 writer.write(cabecalho);
-                writer.newLine ();
+                writer.newLine();
             }
-            writer.write(aluno.toString());
+            writer.write(aluno.toCsvString());
             writer.newLine();
         }
     }
@@ -71,11 +73,11 @@ public class AlunoCSV {
         File arquivo = new File(caminhoArquivo);
 
         if (!arquivo.exists()) {
-            System.out.println("Arquivo '" + caminhoArquivo + "' não encontrado. Retornando lista vazia.");
+            System.out.println("LOG: Arquivo '" + caminhoArquivo + "' não encontrado. Retornando lista vazia.");
             return alunos;
         }
         if (arquivo.length() == 0) {
-            System.out.println("Arquivo '" + caminhoArquivo + "' está vazio. Retornando lista vazia.");
+            System.out.println("LOG: Arquivo '" + caminhoArquivo + "' está vazio. Retornando lista vazia.");
             return alunos;
         }
 
@@ -83,28 +85,28 @@ public class AlunoCSV {
             String linha = reader.readLine();
 
             if (linha == null) {
-                System.out.println("Arquivo CSV '" + caminhoArquivo + "' está vazio ou não contém dados válidos. Retornando lista vazia.");
+                System.out.println("LOG: Arquivo CSV '" + caminhoArquivo + "' está vazio após leitura inicial. Retornando lista vazia.");
                 return alunos;
             }
+
             if (!linha.trim().equalsIgnoreCase(cabecalho.trim())) {
-                System.err.println("AVISO: O arquivo CSV '" + caminhoArquivo + "' não contém o cabeçalho esperado. ('" + cabecalho + "'))");
+                System.err.println("AVISO: O cabeçalho do arquivo CSV ('" + linha + "') não corresponde ao esperado ('" + cabecalho + "').");
                 if (!linha.trim().isEmpty()) {
-                    System.err.println("Tentando ler os dados do arquivo sem o cabeçalho...");
+                    System.err.println("Tentando processar a primeira linha como dados do aluno...");
                     try {
                         alunos.add(Aluno.fromCsvString(linha));
                     } catch (Validacao e) {
-                        System.err.println("Erro ao processar a primeira linha (sem cabeçalho ou cabeçalho inválido) como dados: '" + linha + "'. Erro: " + e.getMessage() + ". Linha ignorada.");
-
+                        System.err.println("Erro ao processar a primeira linha (que não era o cabeçalho esperado) como dados: '" + linha + "'. Erro: " + e.getMessage() + ". Linha ignorada.");
                     }
                 }
             }
 
             while ((linha = reader.readLine()) != null) {
-                if (linha.trim().isEmpty()) {
+                if (!linha.trim().isEmpty()) {
                     try {
                         alunos.add(Aluno.fromCsvString(linha));
                     } catch (Validacao e) {
-                        System.err.println("Erro ao processar a linha vazia: '" + linha + "'. Erro: " + e.getMessage() + ". Linha ignorada.");
+                        System.err.println("Erro ao processar linha do CSV: '" + linha + "'. Erro: " + e.getMessage() + ". Linha ignorada.");
                     }
                 }
             }
