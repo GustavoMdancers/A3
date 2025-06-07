@@ -1,7 +1,8 @@
 Trabalho A3 para a matéria de Programação de soluções computacionais
 
-Aline Cândido Reis - 124220908
-Gustavo Morais - 1242022304
+Aline Cândido Reis - 124220908;
+
+Gustavo Morais - 1242022304;
 
 A classe GestaoAlunos oferece uma interface de linha de comando (CLI) para realizar operações CRUD (Criar, Ler, Editar, Excluir) em registros de alunos. A classe Aluno encapsula os dados de cada estudante (nome, matrícula, curso, etc.) e inclui métodos para validar essas informações, lançando uma exceção Validacao em caso de dados inválidos. A persistência dos dados é gerenciada pela classe AlunoCSV, que lê e escreve os registros dos alunos em um arquivo CSV, permitindo que as informações sejam salvas e carregadas entre as sessões do programa.
 
